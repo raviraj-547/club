@@ -169,7 +169,7 @@ export default function Home() {
             </div>
             <div className="p-8">
               <div className="font-semibold text-[#6082b6] mb-4">November 25, 2025</div>
-              <h3 className="text-2xl text-[#1a1a2e] mb-4">Placeholder Event Title</h3>
+              <h3 className="text-2xl text-[#1a1a2e] mb-4">DevFest</h3>
               <p className="text-base text-[#666] mb-6">This is a description for the upcoming event.</p>
               <Link href="/register" className="btn bg-[#6082b6] text-white hover:bg-[#6082b6]">Register Now</Link>
             </div>
