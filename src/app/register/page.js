@@ -1,9 +1,11 @@
+"use client"
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, AlertCircle, Calendar, User, Hash, Mail, Phone, BookOpen, School, Clock, MessageSquare } from 'lucide-react';
 
 // --- Components ---
 
 const ThankYou = ({ onBack }) => (
+<<<<<<< HEAD
     <section className="min-h-screen bg-[#f5f5f5] flex items-center justify-center p-4">
         <div className="bg-white p-12 rounded-[15px] shadow-[0_10px_40px_rgba(0,0,0,0.1)] max-w-lg text-center animate-fade-in-up">
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -24,6 +26,29 @@ const ThankYou = ({ onBack }) => (
             </button>
         </div>
     </section>
+=======
+  <section className="min-h-screen bg-[#f5f5f5] flex items-center justify-center p-4">
+    <div className="bg-white p-12 rounded-[15px] shadow-[0_10px_40px_rgba(0,0,0,0.1)] max-w-lg text-center animate-fade-in-up">
+      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <CheckCircle className="w-10 h-10 text-green-600" />
+      </div>
+      <h2 className="text-3xl font-bold text-[#2c4363] mb-4">Registration Successful!</h2>
+           <p className="text-gray-600 text-lg mb-8">
+            Thankyou for registering.<br />
+        Please take a screenshot of your unique ID .
+      </p>
+      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-8 text-sm text-gray-500">
+       <span className="font-bold text-800">Registration ID: </span> <span className="font-mono font-medium text-[#2c4363]">{sessionStorage.getItem('registrationID')}</span>
+      </div>
+      <button 
+        onClick={onBack}
+        className="w-full bg-[#2c4363] text-white py-3 rounded-lg font-bold shadow-md hover:bg-[#1a2c45] transform active:scale-95 transition-all"
+      >
+        Register Another Student
+      </button>
+    </div>
+  </section>
+>>>>>>> 67c0e41 (Saving current work before rebase)
 );
 
 const RegisterForm = ({ onSuccess }) => {
@@ -67,21 +92,34 @@ const RegisterForm = ({ onSuccess }) => {
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             // In production, you would uncomment the fetch calls below:
-            /*
-            fetch(googleScriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: submissionData
-            }).catch(err => console.log('Google Sheets request sent'));
-
-            const emailResponse = await fetch(formSubmitURL, {
-                method: 'POST',
-                body: submissionData,
-                headers: { 'Accept': 'application/json' }
-            });
             
-            if (!emailResponse.ok) throw new Error('Email submission failed');
-            */
+            try {
+                    // Google Sheet (Apps Script)
+                    fetch(googleScriptURL, {
+                        method: 'POST',
+                        mode: 'no-cors',  // Apps Script requires no-cors unless deployed as "web app"
+                        body: submissionData
+                    });
+
+                    console.log("Google Sheet request sent (no-cors)");
+
+                    // Email API (expects a readable response)
+                    const emailResponse = await fetch(formSubmitURL, {
+                        method: 'POST',
+                        headers: { "Accept": "application/json" },
+                        body: submissionData
+                    });
+
+                    if (!emailResponse.ok) {
+                        throw new Error("Email submission failed");
+                    }
+
+                    console.log("Email request successful!");
+                } catch (error) {
+                    console.error("Submission Error:", error);
+                }
+
+            
             // --- SIMULATION END ---
 
             // Success handling
@@ -147,7 +185,7 @@ const RegisterForm = ({ onSuccess }) => {
                                         value={formData.name}
                                         onChange={handleChange}
                                         className="w-full p-3 border border-[#ccc] rounded-lg text-base focus:outline-none focus:border-[#6082b6] focus:ring-4 focus:ring-[#6082b6]/10 transition-all"
-                                        placeholder="John Doe"
+                                        placeholder="Name"
                                     />
                                 </div>
 
@@ -183,7 +221,7 @@ const RegisterForm = ({ onSuccess }) => {
                                         value={formData.email}
                                         onChange={handleChange}
                                         className="w-full p-3 border border-[#ccc] rounded-lg text-base focus:outline-none focus:border-[#6082b6] focus:ring-4 focus:ring-[#6082b6]/10 transition-all"
-                                        placeholder="john@example.com"
+                                        placeholder="abc@gmail.com"
                                     />
                                 </div>
 
@@ -280,7 +318,7 @@ const RegisterForm = ({ onSuccess }) => {
                             {/* Message */}
                             <div className="form-group">
                                 <label htmlFor="message" className="flex items-center gap-2 font-semibold mb-2 text-[#2c4363]">
-                                    <MessageSquare className="w-4 h-4" /> Any questions or comments? <span className="font-normal text-gray-500">(Optional)</span>
+                                    <MessageSquare className="w-2 h-2" /> Any questions or comments? <span className="font-normal text-gray-500">(Optional)</span>
                                 </label>
                                 <textarea
                                     id="message"
