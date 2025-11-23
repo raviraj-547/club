@@ -4,26 +4,26 @@ import { CheckCircle, AlertCircle, Calendar, User, Hash, Mail, Phone, BookOpen, 
 // --- Components ---
 
 const ThankYou = ({ onBack }) => (
-  <section className="min-h-screen bg-[#f5f5f5] flex items-center justify-center p-4">
-    <div className="bg-white p-12 rounded-[15px] shadow-[0_10px_40px_rgba(0,0,0,0.1)] max-w-lg text-center animate-fade-in-up">
-      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <CheckCircle className="w-10 h-10 text-green-600" />
-      </div>
-      <h2 className="text-3xl font-bold text-[#2c4363] mb-4">Registration Successful!</h2>
-      <p className="text-gray-600 text-lg mb-8">
-        Thank you for registering. We have received your details and a confirmation email will be sent shortly.
-      </p>
-      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-8 text-sm text-gray-500">
-        Registration ID: <span className="font-mono font-medium text-[#2c4363]">{sessionStorage.getItem('registrationID')}</span>
-      </div>
-      <button 
-        onClick={onBack}
-        className="w-full bg-[#2c4363] text-white py-3 rounded-lg font-bold shadow-md hover:bg-[#1a2c45] transform active:scale-95 transition-all"
-      >
-        Register Another Student
-      </button>
-    </div>
-  </section>
+    <section className="min-h-screen bg-[#f5f5f5] flex items-center justify-center p-4">
+        <div className="bg-white p-12 rounded-[15px] shadow-[0_10px_40px_rgba(0,0,0,0.1)] max-w-lg text-center animate-fade-in-up">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="w-10 h-10 text-green-600" />
+            </div>
+            <h2 className="text-3xl font-bold text-[#2c4363] mb-4">Registration Successful!</h2>
+            <p className="text-gray-600 text-lg mb-8">
+                Thank you for registering. We have received your details and a confirmation email will be sent shortly.
+            </p>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-8 text-sm text-gray-500">
+                Registration ID: <span className="font-mono font-medium text-[#2c4363]">{sessionStorage.getItem('registrationID')}</span>
+            </div>
+            <button
+                onClick={onBack}
+                className="w-full bg-[#2c4363] text-white py-3 rounded-lg font-bold shadow-md hover:bg-[#1a2c45] transform active:scale-95 transition-all"
+            >
+                Register Another Student
+            </button>
+        </div>
+    </section>
 );
 
 const RegisterForm = ({ onSuccess }) => {
@@ -65,7 +65,7 @@ const RegisterForm = ({ onSuccess }) => {
             // --- SIMULATION START ---
             // Simulating network delay for 1.5 seconds to show loading state
             await new Promise(resolve => setTimeout(resolve, 1500));
-            
+
             // In production, you would uncomment the fetch calls below:
             /*
             fetch(googleScriptURL, {
@@ -109,7 +109,7 @@ const RegisterForm = ({ onSuccess }) => {
                     <div className="h-2 bg-[#2c4363]"></div>
                     <div className="p-8 md:p-12">
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            
+
                             {/* Event Selection */}
                             <div className="form-group">
                                 <label htmlFor="event" className="flex items-center gap-2 font-semibold mb-2 text-[#2c4363]">
@@ -318,7 +318,7 @@ const RegisterForm = ({ onSuccess }) => {
                         </form>
                     </div>
                 </div>
-                
+
                 <p className="text-center text-gray-400 text-sm mt-8 pb-8">
                     &copy; {new Date().getFullYear()} Event Organization Committee
                 </p>
@@ -334,8 +334,8 @@ export default function App() {
     useEffect(() => {
         // Check if previously registered in this session
         if (sessionStorage.getItem('registrationID')) {
-             // You can uncomment this if you want to persist the 'Thank You' state on reload
-             // setView('thankyou');
+            // You can uncomment this if you want to persist the 'Thank You' state on reload
+            // setView('thankyou');
         }
     }, []);
 
