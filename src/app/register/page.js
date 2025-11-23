@@ -3,45 +3,28 @@ import { CheckCircle, AlertCircle, Calendar, User, Hash, Mail, Phone, BookOpen, 
 
 // --- Components ---
 
-const ThankYou = ({ onBack }) => {
-    const [registrationID, setRegistrationID] = useState(null);
-
-    useEffect(() => {
-        const id = sessionStorage.getItem('registrationID');
-        if (id) {
-            setRegistrationID(id);
-            // Clear it so it's not shown again on refresh or subsequent visits if desired
-            sessionStorage.removeItem('registrationID');
-        }
-    }, []);
-
-    return (
-        <div className="flex-grow flex items-center justify-center py-8 px-[5%] min-h-screen bg-[#f5f5f5]">
-            <div className="bg-white rounded-[15px] shadow-[0_10px_40px_rgba(0,0,0,0.1)] p-12 md:p-16 text-center max-w-[600px] animate-fade-in-up">
-                <h1 className="text-[2.5rem] font-bold text-[#6082b6] mb-6">Thank You!</h1>
-                <p className="text-[1.1rem] text-[#555] mb-10">
-                    Your event registration has been received. We've saved your spot and will send a confirmation email shortly. We look forward to seeing you there!
-                </p>
-
-                {registrationID && (
-                    <div className="mt-8 mb-10 p-6 bg-[#f5f5f5] rounded-lg border border-dashed border-[#6082b6]">
-                        <p className="mb-2 text-[1.1rem] text-[#2c4363]">Please save your unique Registration ID:</p>
-                        <strong className="text-[#6082b6] text-[1.8rem] font-bold block tracking-wide select-all">
-                            {registrationID}
-                        </strong>
-                    </div>
-                )}
-
-                <button 
-                    onClick={onBack} 
-                    className="inline-block bg-[#2c4363] text-white text-[1.1rem] py-3 px-8 rounded-lg font-semibold hover:bg-[#1a2c45] transition-all shadow-md hover:shadow-lg transform active:scale-95"
-                >
-                    Back to Homepage
-                </button>
-            </div>
-        </div>
-    );
-};
+const ThankYou = ({ onBack }) => (
+  <section className="min-h-screen bg-[#f5f5f5] flex items-center justify-center p-4">
+    <div className="bg-white p-12 rounded-[15px] shadow-[0_10px_40px_rgba(0,0,0,0.1)] max-w-lg text-center animate-fade-in-up">
+      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <CheckCircle className="w-10 h-10 text-green-600" />
+      </div>
+      <h2 className="text-3xl font-bold text-[#2c4363] mb-4">Registration Successful!</h2>
+      <p className="text-gray-600 text-lg mb-8">
+        Thank you for registering. We have received your details and a confirmation email will be sent shortly.
+      </p>
+      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-8 text-sm text-gray-500">
+        Registration ID: <span className="font-mono font-medium text-[#2c4363]">{sessionStorage.getItem('registrationID')}</span>
+      </div>
+      <button 
+        onClick={onBack}
+        className="w-full bg-[#2c4363] text-white py-3 rounded-lg font-bold shadow-md hover:bg-[#1a2c45] transform active:scale-95 transition-all"
+      >
+        Register Another Student
+      </button>
+    </div>
+  </section>
+);
 
 const RegisterForm = ({ onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -261,7 +244,7 @@ const RegisterForm = ({ onSuccess }) => {
                                             <option value="CCT">CCT</option>
                                             <option value="CBSA">CBSA</option>
                                             <option value="CCP">CCP</option>
-                                            <option value="CCET">CCET</option>
+                                            <option value="CCET">CCE</option>
                                             <option value="CCHM">CCHM</option>
                                             <option value="Other">Other</option>
                                         </select>
