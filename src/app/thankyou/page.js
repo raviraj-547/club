@@ -1,86 +1,31 @@
-"use client";
+"use client"
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import { Check } from 'lucide-react';
-=======
-import { Check, Calendar, User, Hash, Mail, Phone, BookOpen, School, Clock, MessageSquare, AlertCircle } from 'lucide-react';
->>>>>>> 67c0e41 (Saving current work before rebase)
+import { CheckCircle, AlertCircle, Calendar, User, Hash, Mail, Phone, BookOpen, School, Clock, MessageSquare } from 'lucide-react';
 
 // --- Components ---
 
-const ThankYou = ({ onBack }) => {
-    const [registrationID, setRegistrationID] = useState(null);
-
-    useEffect(() => {
-        // Ensure this only runs on the client
-        if (typeof window !== 'undefined') {
-            const id = sessionStorage.getItem('registrationID');
-            if (id) {
-                setRegistrationID(id);
-                // We keep it in session storage briefly or clear it as needed
-                sessionStorage.removeItem('registrationID');
-            }
-        }
-    }, []);
-
-    const handleBack = () => {
-        window.location.href = '/register';
-    };
-
-    return (
-        <div className="flex-grow flex items-center justify-center py-8 px-4 min-h-screen bg-[#f5f5f5]">
-            <div className="bg-white rounded-xl shadow-lg p-8 md:p-12 text-center max-w-[500px] w-full animate-fade-in-up">
-                {/* Success Icon */}
-                <div className="flex justify-center mb-6">
-                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                        <Check className="w-10 h-10 text-green-600" strokeWidth={3} />
-                    </div>
-                </div>
-<<<<<<< HEAD
-
-                {/* Title */}
-                <h1 className="text-3xl font-bold text-[#1e293b] mb-4">Registration Successful!</h1>
-
-                {/* Subtitle */}
-                <p className="text-gray-500 mb-8 leading-relaxed">
-                    Thank you for registering.
-                </p>
-
-=======
-
-                {/* Title */}
-                <h1 className="text-3xl font-bold text-[#1e293b] mb-4">Registration Successful!</h1>
-                
-                {/* Subtitle */}
-                <p className="text-gray-500 mb-8 leading-relaxed">
-                    Thank you for registering.
-                </p>
-               
->>>>>>> 67c0e41 (Saving current work before rebase)
-
-                {/* ID Box */}
-                {registrationID && (
-                    <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200 text-gray-600">
-                        Registration ID: <span className="font-bold text-[#1e293b]">{registrationID}</span>
-                    </div>
-                )}
-
-                {/* Button */}
-<<<<<<< HEAD
-                <button
-                    onClick={handleBack}
-=======
-                <button 
-                    onClick={onBack} 
->>>>>>> 67c0e41 (Saving current work before rebase)
-                    className="w-full bg-[#1e293b] text-white text-lg py-3 rounded-lg font-semibold hover:bg-[#0f172a] transition-all shadow-md active:scale-[0.98]"
-                >
-                    Register Another Student
-                </button>
+const ThankYou = ({ onBack }) => (
+    <section className="min-h-screen bg-[#f5f5f5] flex items-center justify-center p-4">
+        <div className="bg-white p-12 rounded-[15px] shadow-[0_10px_40px_rgba(0,0,0,0.1)] max-w-lg text-center animate-fade-in-up">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="w-10 h-10 text-green-600" />
             </div>
+            <h2 className="text-3xl font-bold text-[#2c4363] mb-4">Registration Successful!</h2>
+            <p className="text-gray-600 text-lg mb-8">
+                Thank you for registering. We have received your details and a confirmation email will be sent shortly.
+            </p>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-8 text-sm text-gray-500">
+                Registration ID: <span className="font-mono font-medium text-[#2c4363]">{sessionStorage.getItem('registrationID')}</span>
+            </div>
+            <button
+                onClick={onBack}
+                className="w-full bg-[#2c4363] text-white py-3 rounded-lg font-bold shadow-md hover:bg-[#1a2c45] transform active:scale-95 transition-all"
+            >
+                Register Another Student
+            </button>
         </div>
-    );
-};
+    </section>
+);
 
 const RegisterForm = ({ onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -121,23 +66,36 @@ const RegisterForm = ({ onSuccess }) => {
             // --- SIMULATION START ---
             // Simulating network delay for 1.5 seconds to show loading state
             await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // In production, you would uncomment the fetch calls below:
-            /*
-            fetch(googleScriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: submissionData
-            }).catch(err => console.log('Google Sheets request sent'));
 
-            const emailResponse = await fetch(formSubmitURL, {
-                method: 'POST',
-                body: submissionData,
-                headers: { 'Accept': 'application/json' }
-            });
-            
-            if (!emailResponse.ok) throw new Error('Email submission failed');
-            */
+            // In production, you would uncomment the fetch calls below:
+
+            try {
+                // Google Sheet (Apps Script)
+                fetch(googleScriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',  // Apps Script requires no-cors unless deployed as "web app"
+                    body: submissionData
+                });
+
+                console.log("Google Sheet request sent (no-cors)");
+
+                // Email API (expects a readable response)
+                const emailResponse = await fetch(formSubmitURL, {
+                    method: 'POST',
+                    headers: { "Accept": "application/json" },
+                    body: submissionData
+                });
+
+                if (!emailResponse.ok) {
+                    throw new Error("Email submission failed");
+                }
+
+                console.log("Email request successful!");
+            } catch (error) {
+                console.error("Submission Error:", error);
+            }
+
+
             // --- SIMULATION END ---
 
             // Success handling
@@ -165,7 +123,7 @@ const RegisterForm = ({ onSuccess }) => {
                     <div className="h-2 bg-[#2c4363]"></div>
                     <div className="p-8 md:p-12">
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            
+
                             {/* Event Selection */}
                             <div className="form-group">
                                 <label htmlFor="event" className="flex items-center gap-2 font-semibold mb-2 text-[#2c4363]">
@@ -367,14 +325,14 @@ const RegisterForm = ({ onSuccess }) => {
 
                             {status === 'error' && (
                                 <div className="flex items-center gap-2 text-[#c0152f] text-sm bg-red-50 p-3 rounded-lg border border-red-100 animate-pulse">
-                                    <AlertCircle className="w-4 h-4 shrink-0" />
+                                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
                                     <p>{errorMessage}</p>
                                 </div>
                             )}
                         </form>
                     </div>
                 </div>
-                
+
                 <p className="text-center text-gray-400 text-sm mt-8 pb-8">
                     &copy; {new Date().getFullYear()} Event Organization Committee
                 </p>
@@ -389,9 +347,9 @@ export default function App() {
 
     useEffect(() => {
         // Check if previously registered in this session
-        // Wrap in browser check just in case, though useEffect runs client-side anyway
-        if (typeof window !== 'undefined' && sessionStorage.getItem('registrationID')) {
-             // setView('thankyou');
+        if (sessionStorage.getItem('registrationID')) {
+            // You can uncomment this if you want to persist the 'Thank You' state on reload
+            // setView('thankyou');
         }
     }, []);
 
@@ -402,9 +360,7 @@ export default function App() {
 
     const handleBack = () => {
         // Reset and go back to form
-        if (typeof window !== 'undefined') {
-            sessionStorage.removeItem('registrationID');
-        }
+        sessionStorage.removeItem('registrationID');
         setView('register');
     };
 
