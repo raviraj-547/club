@@ -2,6 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, AlertCircle, Calendar, User, Hash, Mail, Phone, BookOpen, School, Clock, MessageSquare } from 'lucide-react';
 
+// --- Configuration ---
+// 1. Enter your Google Script Deployment URL here
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyr-oIFTXiwkHl82Lx5QqCjXu4f_g8zD1SxzCTOkraUnZdMueId1N7dwCIR7YYXWyJn5Q/exec';
+
+// 2. Enter your FormSubmit Email URL here
+const FORM_SUBMIT_EMAIL = 'https://formsubmit.co/raviraj17a@gmail.com';
+
 // --- Components ---
 
 const ThankYou = ({ onBack }) => (
@@ -12,10 +19,10 @@ const ThankYou = ({ onBack }) => (
             </div>
             <h2 className="text-3xl font-bold text-[#2c4363] mb-4">Registration Successful!</h2>
             <p className="text-gray-600 text-lg mb-8">
-                Thank you for registering. We have received your details and a confirmation email will be sent shortly.
+                Thank you for registering. We have received your details.
             </p>
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-8 text-sm text-gray-500">
-                Registration ID: <span className="font-mono font-medium text-[#2c4363]">{sessionStorage.getItem('registrationID')}</span>
+                Registration ID: <span className="font-mono font-medium text-[#2c4363] block text-xl mt-1">{sessionStorage.getItem('registrationID')}</span>
             </div>
             <button
                 onClick={onBack}
@@ -39,7 +46,7 @@ const RegisterForm = ({ onSuccess }) => {
         year: "",
         message: ""
     });
-    const [status, setStatus] = useState('idle'); // idle, submitting, error
+    const [status, setStatus] = useState('idle'); 
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleChange = (e) => {
@@ -51,61 +58,64 @@ const RegisterForm = ({ onSuccess }) => {
         setStatus('submitting');
         setErrorMessage('');
 
-        const uniqueID = `TAC-${Date.now().toString(36)}`;
-
-        // NOTE: In a real app, these are your endpoints. 
-        // For this demo, we will simulate a successful request to show the UI flow.
-        const googleScriptURL = 'https://script.google.com/macros/s/AKfycbyr-oIFTXiwkHl82Lx5QqCjXu4f_g8zD1SxzCTOkraUnZdMueId1N7dwCIR7YYXWyJn5Q/exec';
-        const formSubmitURL = 'https://formsubmit.co/raviraj17a@gmail.com';
-
-        const submissionData = new FormData();
-        Object.keys(formData).forEach(key => submissionData.append(key, formData[key]));
-        submissionData.append('Registration ID', uniqueID);
+        // 1. Generate the Unique ID
+        const uniqueID = `TAC-${Date.now().toString(36).toUpperCase()}`;
 
         try {
-            // --- SIMULATION START ---
-            // Simulating network delay for 1.5 seconds to show loading state
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // 2. Prepare Data for Google Sheets (URLSearchParams)
+            // We use URLSearchParams to ensure the 'doPost' script receives 'e.parameter' correctly
+            const googleSheetData = new URLSearchParams();
+            
+            // --- CRITICAL: MATCHING YOUR SCRIPT KEYS EXACTLY --
+           googleSheetData.append('registration_id', uniqueID);
 
-            // In production, you would uncomment the fetch calls below:
-
-            try {
-                // Google Sheet (Apps Script)
-                fetch(googleScriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors',  // Apps Script requires no-cors unless deployed as "web app"
-                    body: submissionData
-                });
-
-                console.log("Google Sheet request sent (no-cors)");
-
-                // Email API (expects a readable response)
-                const emailResponse = await fetch(formSubmitURL, {
-                    method: 'POST',
-                    headers: { "Accept": "application/json" },
-                    body: submissionData
-                });
-
-                if (!emailResponse.ok) {
-                    throw new Error("Email submission failed");
-                }
-
-                console.log("Email request successful!");
-            } catch (error) {
-                console.error("Submission Error:", error);
-            }
+            
+            // Your script asks for: data.event, data.name, etc.
+            googleSheetData.append('event', formData.event);
+            googleSheetData.append('name', formData.name);
+            googleSheetData.append('roll_number', formData.roll_number);
+            googleSheetData.append('email', formData.email);
+            googleSheetData.append('mobile_number', formData.mobile_number);
+            googleSheetData.append('branch', formData.branch);
+            googleSheetData.append('college', formData.college);
+            googleSheetData.append('year', formData.year);
+            googleSheetData.append('message', formData.message);
 
 
-            // --- SIMULATION END ---
+            // 3. Prepare Data for Email (FormData)
+            // FormSubmit handles FormData well
+            const emailData = new FormData();
+            Object.keys(formData).forEach(key => emailData.append(key, formData[key]));
+            emailData.append('Registration ID', uniqueID); // Clean name for email
+            emailData.append('_captcha', 'false'); 
+            emailData.append('_subject', `New Registration: ${formData.name}`);
+            emailData.append('_template', 'table');
 
-            // Success handling
+            // --- API Call 1: Google Sheets ---
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Required for Google Scripts
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: googleSheetData
+            });
+
+            // --- API Call 2: FormSubmit (Email) ---
+            await fetch(FORM_SUBMIT_EMAIL, {
+                method: 'POST',
+                headers: { "Accept": "application/json" },
+                body: emailData
+            });
+
+            // Success Handling
             sessionStorage.setItem('registrationID', uniqueID);
             onSuccess();
 
         } catch (error) {
             console.error('Error submitting form:', error);
             setStatus('error');
-            setErrorMessage('There was an error submitting your registration. Please try again or contact us directly.');
+            setErrorMessage('Network error. Please check your connection and try again.');
         }
     };
 
@@ -115,7 +125,7 @@ const RegisterForm = ({ onSuccess }) => {
                 <div className="text-center mb-10">
                     <h2 className="text-4xl font-extrabold text-[#2c4363] mb-4">Event Registration</h2>
                     <p className="text-[1.1rem] text-gray-600 max-w-2xl mx-auto">
-                        Register for one of our upcoming events! Fill out the form below to secure your spot.
+                        Register for one of our upcoming events!
                     </p>
                 </div>
 
@@ -258,7 +268,7 @@ const RegisterForm = ({ onSuccess }) => {
                                             <option value="CCT">CCT</option>
                                             <option value="CBSA">CBSA</option>
                                             <option value="CCP">CCP</option>
-                                            <option value="CCET">CCE</option>
+                                            <option value="CCET">CCET</option>
                                             <option value="CCHM">CCHM</option>
                                             <option value="Other">Other</option>
                                         </select>
@@ -294,7 +304,7 @@ const RegisterForm = ({ onSuccess }) => {
                             {/* Message */}
                             <div className="form-group">
                                 <label htmlFor="message" className="flex items-center gap-2 font-semibold mb-2 text-[#2c4363]">
-                                    <MessageSquare className="w-2 h-2" /> Any questions or comments? <span className="font-normal text-gray-500">(Optional)</span>
+                                    <MessageSquare className="w-2 h-2" /> Any questions? <span className="font-normal text-gray-500">(Optional)</span>
                                 </label>
                                 <textarea
                                     id="message"
@@ -334,7 +344,7 @@ const RegisterForm = ({ onSuccess }) => {
                 </div>
 
                 <p className="text-center text-gray-400 text-sm mt-8 pb-8">
-                    &copy; {new Date().getFullYear()} Event Organization Committee
+                    &copy; {new Date().getFullYear()} Tech Amigos Club
                 </p>
             </div>
         </section>
@@ -342,15 +352,13 @@ const RegisterForm = ({ onSuccess }) => {
 };
 
 export default function App() {
-    // Simple state-based routing for the single file component
     const [view, setView] = useState('register');
 
     useEffect(() => {
-        // Check if previously registered in this session
-        if (sessionStorage.getItem('registrationID')) {
-            // You can uncomment this if you want to persist the 'Thank You' state on reload
-            // setView('thankyou');
-        }
+        // Uncomment below to keep the user on the thank you page after refresh
+        // if (sessionStorage.getItem('registrationID')) {
+        //     setView('thankyou');
+        // }
     }, []);
 
     const handleSuccess = () => {
@@ -359,7 +367,6 @@ export default function App() {
     };
 
     const handleBack = () => {
-        // Reset and go back to form
         sessionStorage.removeItem('registrationID');
         setView('register');
     };

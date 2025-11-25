@@ -12,7 +12,7 @@ const teams = [
         members: [
             { name: "Ayush", role: "Developer", img: "/team/Ayush.jpg" },
             { name: "Raviraj", role: "Developer", img: "/team/Raviraj.jpg" },
-            { name: "Siddharth", role: "Developer", img: "/team/Siddharth_.jpg" },
+            { name: "Sidharth", role: "Developer", img: "/team/Siddharth_.jpg" },
         ]
     },
     {
