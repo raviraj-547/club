@@ -86,7 +86,8 @@ section#home {
   transform: translateX(-50%);
   width: 100px;
   height: 4px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  /* CHANGED: Switched from linear-gradient to a single solid color */
+  background: var(--color-primary); 
   border-radius: 2px;
 }
 
