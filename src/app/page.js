@@ -249,22 +249,22 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {leaders.map((leader, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="leader-card group bg-white rounded-2xl p-8 shadow-[0_10px_30px_rgba(0,0,0,0.05)] 
                            hover:shadow-[0_20px_40px_rgba(96,130,182,0.15)] transition-all duration-300 
-                           hover:-translate-y-2 border border-gray-100"
+                           hover:-translate-y-2 active:scale-95 border border-gray-100"
               >
                 {/* Image Container with Gradient Ring */}
                 <div className="relative w-40 h-40 mx-auto mb-6">
                   <div className="absolute inset-0 rounded-full bg-linear-to-tr from-[#6082b6] to-[#93b8e6] p-1 
                                 group-hover:scale-105 transition-transform duration-300">
                     <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white">
-                      <Image 
-                        src={leader.image} 
-                        alt={leader.name} 
-                        fill 
-                        className="object-cover transition-transform duration-500 group-hover:scale-110" 
+                      <Image
+                        src={leader.image}
+                        alt={leader.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                     </div>
                   </div>
@@ -278,15 +278,19 @@ export default function Home() {
                   <p className="text-[#6082b6] font-medium tracking-wide uppercase text-sm mb-4">
                     {leader.role}
                   </p>
-                  
-                  {/* Decorative Line */}
-                  <div className="w-12 h-1 bg-[#6082b6]/20 mx-auto rounded-full mb-6 group-hover:w-24 group-hover:bg-[#6082b6] transition-all duration-300"></div>
 
-                  {/* Social Links Placeholder */}
-                  <div className="flex justify-center gap-4 opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                  {/* Decorative Line: Mobile (Visible/Wide) vs Desktop (Hidden/Small) */}
+                  <div className="h-1 mx-auto rounded-full mb-6 transition-all duration-300
+                                  w-24 bg-[#6082b6] 
+                                  lg:w-12 lg:bg-[#6082b6]/20 lg:group-hover:w-24 lg:group-hover:bg-[#6082b6]"></div>
+
+                  {/* Social Links: Mobile (Visible) vs Desktop (Hover only) */}
+                  <div className="flex justify-center gap-4 transition-all duration-300
+                                  opacity-100 translate-y-0
+                                  lg:opacity-0 lg:translate-y-4 lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
                     <Link href={leader.linkedin} className="text-gray-400 hover:text-[#0077b5] transition-colors">
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                       </svg>
                     </Link>
                   </div>
@@ -308,7 +312,7 @@ export default function Home() {
             </div>
           </div>
           <div className="relative h-[400px]">
-             {/* Adjusted to fill container properly */}
+            {/* Adjusted to fill container properly */}
             <Image src="/event1.2.jpg" alt="About" fill className="rounded-[15px] shadow-lg object-cover" />
           </div>
         </div>
