@@ -355,7 +355,7 @@ export default function App() {
     const [view, setView] = useState('register');
 
     useEffect(() => {
-        // Uncomment below to keep the user on the thank you page after refresh
+        // Neeche wala code uncomment karo agar refresh ke baad bhi Thank You page dikhana hai.
         // if (sessionStorage.getItem('registrationID')) {
         //     setView('thankyou');
         // }
