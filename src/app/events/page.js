@@ -44,8 +44,6 @@ export default function Events() {
                         <Link href="/register" className="btn bg-[#6082b6] text-white hover:bg-[#6082b6]">Register Now</Link>
                     </div>
                 </div>
-
-                {/* Add more event cards as needed */}
                 <div className="event-card bg-white rounded-[15px] overflow-hidden shadow-[0_5px_25px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.2)]">
                     <div className="h-[250px] relative">
                         <Image src="/event1.2.jpg" alt="Event" fill className="object-cover" />
